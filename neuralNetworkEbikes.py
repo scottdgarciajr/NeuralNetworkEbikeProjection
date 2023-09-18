@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.model_selection import KFold
 
 
-#np.random.seed(42) #seed set to 42 for reproducibility... this can be changed and it will reliably show that car sales have the most impact on ebike sales.
+np.random.seed(42) #seed set to 42 for reproducibility... this can be changed and it will reliably show that car sales have the most impact on ebike sales.
 
 # Defining the input data
 sales_data = np.array([130, 152, 263, 369, 423, 416, 750, 928])
@@ -105,53 +105,3 @@ for i in sorted_indices:
     print(input_names[sorted_indices[i]] + ": " + str(importance[i]))
     importance_percentage = importance[i] / total_importance * 100
     print(input_names[sorted_indices[i]] + " weight percent: " + str(importance_percentage) + "%")
-
-
-def evolve(self):
-    parent1, parent2 = self.select()
-    child = self.crossover(parent1, parent2)
-    self.mutate(child)
-    return child
-
-#Define the main loop of the simulation
-
-gen_alg = GeneticAlgorithm(population_size, 4, 4) # 4 inputs (food x, food y, circle x, circle y), 4 outputs (direction)
-clock = pygame.time.Clock()
-while True:
-# Handle events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            quit()
-
-
-
-# Update the circles' positions based on the neural network's output
-for circle in population:
-    inputs = [food_pos[0], food_pos[1], circle.pos_x, circle.pos_y]
-    outputs = gen_alg.population[0].predict(inputs) # Use the first neural network of the population
-    direction = outputs.index(max(outputs))
-    circle.move(direction)
-    circle.draw()
-
-# Check if a circle has reached the food
-for circle in population:
-    distance = math.sqrt((circle.pos_x - food_pos[0])**2 + (circle.pos_y - food_pos[1])**2)
-    if distance <= circle.radius:
-        food_pos = (random.randint(0, window_size[0]), random.randint(0, window_size[1]))
-        gen_alg.fitness[population.index(circle)] += 1
-
-# Evolve the population
-gen_alg.evolve()
-gen_alg.population[0] = gen_alg.select()[0] # Replace the least fit individual with the new one
-
-# Draw the food
-pygame.draw.circle(window, (0, 255, 0), food_pos, 10)
-
-# Update the window
-pygame.display.update()
-
-# Limit the frame rate
-clock.tick(60)
-
-
